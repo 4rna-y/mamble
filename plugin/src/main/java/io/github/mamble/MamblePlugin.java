@@ -97,6 +97,7 @@ public final class MamblePlugin extends JavaPlugin {
         this.roulette = new RouletteService(this, ledger, holds, registry, bets, panel, animator, rouletteSettings, random);
         this.resourcePack = new ResourcePackService(this);
         resourcePack.start();
+        MambleRecipes.register(getServer());
 
         getServer().getPluginManager().registerEvents(
                 new MachineListener(this, registry, builder, slots, exchange, blackjack, roulette, ledger), this);
@@ -155,6 +156,7 @@ public final class MamblePlugin extends JavaPlugin {
     /** 参加時: パックを送り、残高を読み込む。 */
     void onPlayerJoin(Player player) {
         resourcePack.send(player, status -> { });
+        MambleRecipes.discover(player);
         loadBalance(player);
     }
 
@@ -204,6 +206,7 @@ public final class MamblePlugin extends JavaPlugin {
         if (resourcePack != null) {
             resourcePack.stop();
         }
+        MambleRecipes.unregister(getServer());
         if (ledger != null) {
             ledger.close(getConfig().getLong("flush-timeout-seconds", CreditLedger.DEFAULT_FLUSH_TIMEOUT_SECONDS));
         }
