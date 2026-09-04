@@ -1,0 +1,20 @@
+{
+  "textures": {
+    "layer0": "mamble:item/roulette_wheel",
+    "particle": "mamble:item/roulette_wheel"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 7.75],
+      "to": [16, 16, 8.25],
+      "shade": false,
+      "faces": {
+        "north": { "uv": [16, 0, 0, 16], "texture": "#layer0" },
+        "south": { "uv": [0, 0, 16, 16], "texture": "#layer0" }
+      }
+    }
+  ],
+  "display": {
+    "fixed": { "rotation": [0, 180, 0], "scale": [1, 1, 1] }
+  }
+}

@@ -1,0 +1,121 @@
+# Mamble — スロット台と交換機。クレジットは mstore に保存する。
+
+# false にすると何もしない (台も動かず、コマンドも登録しない)。
+enabled: true
+
+# コマンドやアクションバーの返答に付ける接頭辞 (MiniMessage 形式)。
+message-prefix: "<gray>[<gold>Mamble<gray>]</gray> "
+
+# クレジットの記録先。
+mstore:
+  # KV ストアの入口。mstore の --kv-bind / --kv-port に合わせる。
+  base-url: "http://127.0.0.1:8080"
+  # mstore を --kv-token 付きで動かしている場合のトークン。空文字なら送らない。
+  token: ""
+  # 1リクエストあたりの待ち時間 (秒)。
+  timeout-seconds: 3
+  # 1回の読み書きで挑む回数。1 なら再試行しない。
+  attempts: 3
+
+# キーの接頭辞。mamble/credit/<uuid>, mamble/name/<uuid> になる。
+key-prefix: "mamble"
+
+# サーバー停止時に、書きかけの残高を待つ時間 (秒)。
+flush-timeout-seconds: 5
+
+# 1スピンに賭けられる額。min から max まで step 刻みで、台の [-] [+] は step ずつ動く
+# (スニークしながら押すと 10 段ぶん)。
+bet:
+  min: 10
+  max: 1000
+  step: 10
+  default: 10
+
+# シンボル。weight は1リールでの出現率 (%) で、合計が 100 でなければ起動しない。
+# pays は 3個・4個・5個揃いの倍率。5マス中どこにあっても数える。
+# 既定の表で還元率は約 94%、当たる確率は約 19.6%。
+symbols:
+  cherry: { name: "チェリー", weight: 24, pays: [2, 6, 20] }
+  lemon:  { name: "レモン",   weight: 18, pays: [4, 12, 40] }
+  orange: { name: "オレンジ", weight: 14, pays: [6, 16, 60] }
+  plum:   { name: "プラム",   weight: 14, pays: [6, 16, 60] }
+  grape:  { name: "ブドウ",   weight: 10, pays: [8, 20, 80] }
+  melon:  { name: "スイカ",   weight: 8,  pays: [12, 40, 200] }
+  bell:   { name: "ベル",     weight: 5,  pays: [16, 50, 300] }
+  bar:    { name: "BAR",      weight: 4,  pays: [18, 60, 500] }
+  seven:  { name: "7",        weight: 3,  pays: [20, 80, 1000] }
+
+# スピンの演出 (tick)。結果はレバーを引いた瞬間に確定しており、演出はそれを見せるだけ。
+spin:
+  # 回転中にシンボルを差し替える間隔
+  reel-tick-interval: 2
+  # 1番目のリールが止まる時刻
+  first-stop-tick: 20
+  # 2番目以降が止まる間隔
+  stop-interval-ticks: 8
+  # レバーを戻し、次のスピンを受け付ける時刻
+  lever-reset-tick: 60
+  # 当たったマスを光らせる長さ
+  glow-ticks: 60
+  # 当選時に打ち上げ花火を出す (パーティクルは常に出る)
+  fireworks: true
+  # 5個揃いを全員に知らせる
+  broadcast-five-of-a-kind: true
+
+machine:
+  # 最後に操作した人の名前と残高を台に出しておく時間 (秒)
+  operator-timeout-seconds: 60
+
+# ブラックジャック卓。BET は上の bet と共通、花火は spin.fireworks と共通。
+blackjack:
+  # ディーラー (村人) の名前
+  dealer-name: "ディーラー"
+  # 卓のブロック。新しく置く卓にだけ効く (置いた卓は machines.yml に素材を覚える)
+  table-material: DARK_OAK_PLANKS
+  # 誰かが START を押してから配るまでの受付 (秒)。この間に他の席も参加できる
+  join-seconds: 10
+  # 手番の制限 (秒)。過ぎると自動でスタンド
+  turn-seconds: 30
+  # 座ったまま START を押さない席を空けるまで (秒)
+  seat-timeout-seconds: 60
+  # カードを1枚配る間隔 (tick)
+  deal-interval-ticks: 8
+  # ディーラーが1枚引く間隔 (tick)
+  dealer-draw-interval-ticks: 12
+  # 結果を見せる時間 (秒)
+  result-seconds: 5
+
+# ルーレット卓。BET は上の bet と共通、花火は spin.fireworks と共通。
+roulette:
+  # 卓のブロック。新しく置く卓にだけ効く
+  table-material: GREEN_CONCRETE
+  # 最初のチップから回すまでの受付 (秒)
+  bet-seconds: 20
+  # 回転の長さ (tick)
+  spin-ticks: 120
+  # 結果を見せる時間 (秒)
+  result-seconds: 5
+  # 1人が1スピンに置けるチップの枚数
+  max-chips: 20
+
+exchange:
+  # 交換機の画面のタイトル (MiniMessage 形式)
+  title: "<dark_gray>交換機"
+  # シフトクリックでまとめて買う個数
+  bulk-amount: 16
+
+# 参加者へ配るリソースパック。Modifier と同じ仕組みで、ポートだけ分けてある。
+resource-pack:
+  enabled: true
+  # クライアントへ知らせる URL の先頭。空でなければ host と port より優先される。
+  public-base-url: ""
+  # クライアントへ知らせるホスト。プレイヤーの環境から届くアドレスにすること。
+  host: "127.0.0.1"
+  # 待ち受けるアドレス。
+  bind: "0.0.0.0"
+  # 待ち受けるポート。Modifier (8123) とは別にする。
+  port: 8124
+  # true なら、拒否したプレイヤーはクライアント側で接続を切られる。
+  required: true
+  # ダウンロードの確認画面に出す文言 (MiniMessage 形式)。
+  prompt: "<gold>スロットのシンボルを表示するために必要です"
