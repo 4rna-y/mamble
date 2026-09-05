@@ -50,6 +50,9 @@ val resourcePackZip = tasks.register<Zip>("resourcePackZip") {
 }
 
 tasks.processResources {
+    // expand の中身は Gradle から見えないので、version を変えただけでは作り直されない。
+    // 宣言しておかないと jar の名前だけ新しく、中の paper-plugin.yml は古い版のままになる。
+    inputs.property("version", project.version)
     from(resourcePackZip)
     filesMatching("paper-plugin.yml") {
         expand("version" to project.version)
