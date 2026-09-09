@@ -24,7 +24,7 @@ FIFO="/tmp/mamble-smoke-$$.fifo"
 say() { printf '\033[36m==>\033[0m %s\n' "$*" >&2; }
 die() { printf '\033[31mエラー:\033[0m %s\n' "$*" >&2; exit 1; }
 
-JAR="$(ls -1 "$HERE"/../plugin/build/libs/Mamble-*.jar 2>/dev/null | grep -v sources | head -1 || true)"
+JAR="$(ls -1 "$HERE"/../plugin/build/libs/Mamble-*.jar 2>/dev/null | grep -v sources | sort -V | tail -1 || true)"
 [ -n "$JAR" ] || die "Mamble の jar が無い。gradle :plugin:build を先に"
 PAPER="$(ls -1 "$ROOT"/Modifier/e2e/build/paper/paper-26.1*.jar 2>/dev/null | head -1 || true)"
 [ -n "$PAPER" ] || die "26.1 の Paper が無い ($ROOT/Modifier/e2e/build/paper/)"
