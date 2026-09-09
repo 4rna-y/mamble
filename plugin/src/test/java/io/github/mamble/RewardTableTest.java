@@ -21,13 +21,13 @@ class RewardTableTest {
     void defaults() {
         RewardTable table = RewardTable.defaults();
         assertEquals(7, table.size());
-        assertEquals(Optional.of(1L), table.price(Material.COAL));
-        assertEquals(Optional.of(10L), table.price(Material.COPPER_INGOT));
-        assertEquals(Optional.of(30L), table.price(Material.IRON_INGOT));
-        assertEquals(Optional.of(50L), table.price(Material.GOLD_INGOT));
-        assertEquals(Optional.of(100L), table.price(Material.DIAMOND));
-        assertEquals(Optional.of(6400L), table.price(Material.NETHERITE_SCRAP));
-        assertEquals(Optional.of(12800L), table.price(Material.NETHERITE_INGOT));
+        assertEquals(Optional.of(50L), table.price(Material.COAL));
+        assertEquals(Optional.of(500L), table.price(Material.COPPER_INGOT));
+        assertEquals(Optional.of(1500L), table.price(Material.IRON_INGOT));
+        assertEquals(Optional.of(2500L), table.price(Material.GOLD_INGOT));
+        assertEquals(Optional.of(5000L), table.price(Material.DIAMOND));
+        assertEquals(Optional.of(320000L), table.price(Material.NETHERITE_SCRAP));
+        assertEquals(Optional.of(640000L), table.price(Material.NETHERITE_INGOT));
         assertTrue(table.price(Material.CHARCOAL).isEmpty());
     }
 

@@ -27,13 +27,13 @@ public final class RewardTable {
     public static final Map<Material, Long> DEFAULTS;
     static {
         Map<Material, Long> defaults = new LinkedHashMap<>();
-        defaults.put(Material.COAL, 1L);
-        defaults.put(Material.COPPER_INGOT, 10L);
-        defaults.put(Material.IRON_INGOT, 30L);
-        defaults.put(Material.GOLD_INGOT, 50L);
-        defaults.put(Material.DIAMOND, 100L);
-        defaults.put(Material.NETHERITE_SCRAP, 6400L);
-        defaults.put(Material.NETHERITE_INGOT, 12800L);
+        defaults.put(Material.COAL, 50L);
+        defaults.put(Material.COPPER_INGOT, 500L);
+        defaults.put(Material.IRON_INGOT, 1500L);
+        defaults.put(Material.GOLD_INGOT, 2500L);
+        defaults.put(Material.DIAMOND, 5000L);
+        defaults.put(Material.NETHERITE_SCRAP, 320000L);
+        defaults.put(Material.NETHERITE_INGOT, 640000L);
         // Map.copyOf は順序を捨てるので、表示順を保つために LinkedHashMap のまま包む
         DEFAULTS = java.util.Collections.unmodifiableMap(defaults);
     }

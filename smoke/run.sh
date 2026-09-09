@@ -102,7 +102,7 @@ for _ in $(seq 1 60); do
 done
 echo "op Tester" > "$FIFO"
 sleep 0.5
-echo "mb credit Tester set 1000" > "$FIFO"
+echo "mb credit Tester set 50000" > "$FIFO"
 wait "$BOT_PID" || true
 
 # ---------------------------------------------------------------- 結果
