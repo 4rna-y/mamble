@@ -7,6 +7,9 @@ permissions:
   mamble.use:
     description: 残高の確認と bet の変更 (/mamble, /mamble bet)
     default: true
+  mamble.place:
+    description: 設置用アイテムを置いて台にする (作業台で作ったものを非 OP が置くため)
+    default: true
   mamble.admin:
-    description: 台の設置・撤去、報酬表と残高の編集、設定の確認とリロード
+    description: 設置用アイテムの配布、台の撤去、報酬表と残高の編集、設定の確認とリロード
     default: op

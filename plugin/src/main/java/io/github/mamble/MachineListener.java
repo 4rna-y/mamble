@@ -77,7 +77,7 @@ public final class MachineListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        if (!player.hasPermission("mamble.admin")) {
+        if (!player.hasPermission("mamble.place")) {
             event.setCancelled(true);
             player.sendMessage(plugin.message("<red>台を置く権限がありません。"));
             return;
