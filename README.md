@@ -50,7 +50,8 @@ BET の上限は 1000 なので、7 が5個揃っても払い出しは 100 万�
 | `blackjack` | `mamble.admin` | ブラックジャック卓の設置用アイテムを渡す |
 | `roulette` | `mamble.admin` | ルーレット卓の設置用アイテムを渡す |
 | `remove` | `mamble.admin` | 視線の先 (5m) の台を撤去し、設置用アイテムを返す |
-| `reward add <item_id> <単価>` / `remove <item_id>` / `list` | `mamble.admin` | 交換機の品目 (単価は預け入れのもの。払い出しはその `withdraw-multiplier` 倍) |
+| `reward add <item_id> <単価>` / `remove <item_id>` / `list` | `mamble.admin` | 交換機の品目 (単価は預け入れのもの。払い出しはその倍率倍) |
+| `reward multiplier [<倍率>]` | `mamble.admin` | 払い出しの倍率を見る・変える (`rewards.yml` の `withdraw-multiplier`、既定 50) |
 | `credit <player> set\|add <額>` | `mamble.admin` | オンラインの人の残高を直す (補償・動作確認) |
 | `status` | `mamble.admin` | 版・mstore 疎通・台の数・還元率・パック配信・シンボルの土台 |
 | `reload` | `mamble.admin` | `config.yml` と `rewards.yml` を読み直す |
@@ -287,7 +288,7 @@ $ sqlite3 run/mstore.db 'select key, cast(value as text) from kv where key like 
   預け入れは交換機でも台でも同じ単価で、払い出しだけが高い。両替 (鉄を預けてダイヤを引き出す) が採掘より損になるようにするため。
   足りなければ買える分だけ。持ち物に入りきらない分は足元に落とす。
 - 品目は `plugins/Mamble/rewards.yml` (`withdraw-multiplier` と `rewards`)。初回起動で既定7品目を書き出す。既定品目も `reward remove` で外せる。
-  倍率はファイルを直して `/mb reload`。
+  倍率は `/mb reward multiplier <倍率>` で変えられる (ファイルにも保存される)。
 
 ## プラグイン設定 (`plugins/Mamble/config.yml`)
 

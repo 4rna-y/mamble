@@ -96,7 +96,7 @@ public final class MambleCommand implements BasicCommand {
                 }
             }
             default -> sender.sendMessage(plugin.message(sender.hasPermission("mamble.admin")
-                    ? "<red>使い方: /mb [bet <額>|slot|exchange|blackjack|roulette|remove|reward add <item> <価格>|reward remove <item>|reward list|credit <player> set|add <額>|status|reload]"
+                    ? "<red>使い方: /mb [bet <額>|slot|exchange|blackjack|roulette|remove|reward add <item> <単価>|reward remove <item>|reward list|reward multiplier [<倍率>]|credit <player> set|add <額>|status|reload]"
                     : "<red>使い方: /mb [bet <額>]"));
         }
     }
@@ -257,7 +257,30 @@ public final class MambleCommand implements BasicCommand {
                 plugin.saveRewards();
                 sender.sendMessage(plugin.message("<green>" + material.get().getKey() + " を外しました。"));
             }
-            default -> sender.sendMessage(plugin.message("<red>使い方: /mb reward add <item_id> <価格> | remove <item_id> | list"));
+            case "multiplier" -> {
+                if (args.length < 3) {
+                    sender.sendMessage(plugin.message("<gray>払い出しの倍率: <white>" + table.withdrawMultiplier()
+                            + " <gray>(預け入れの単価 × この値が払い出しの価格)。変えるには /mb reward multiplier <倍率>"));
+                    return;
+                }
+                long multiplier;
+                try {
+                    multiplier = Long.parseLong(args[2]);
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(plugin.message("<red>倍率は数字で: " + args[2]));
+                    return;
+                }
+                try {
+                    table.setWithdrawMultiplier(multiplier);
+                    plugin.saveRewards();
+                } catch (IllegalArgumentException e) {
+                    sender.sendMessage(plugin.message("<red>" + e.getMessage()));
+                    return;
+                }
+                sender.sendMessage(plugin.message("<green>払い出しの倍率を " + multiplier + " にしました <gray>(例: ダイヤ "
+                        + table.withdrawPrice(Material.DIAMOND).map(MambleItems::amount).orElse("-") + ")。"));
+            }
+            default -> sender.sendMessage(plugin.message("<red>使い方: /mb reward add <item_id> <預け入れの単価> | remove <item_id> | list | multiplier [<倍率>]"));
         }
     }
 
@@ -341,7 +364,7 @@ public final class MambleCommand implements BasicCommand {
                     .filter(s -> s.startsWith(args[1])).toList();
         }
         if (admin && sub.equals("reward") && args.length == 2) {
-            return List.of("add", "remove", "list").stream().filter(s -> s.startsWith(args[1].toLowerCase(Locale.ROOT))).toList();
+            return List.of("add", "remove", "list", "multiplier").stream().filter(s -> s.startsWith(args[1].toLowerCase(Locale.ROOT))).toList();
         }
         if (admin && sub.equals("credit") && args.length == 3) {
             return List.of("set", "add").stream().filter(s -> s.startsWith(args[2].toLowerCase(Locale.ROOT))).toList();
