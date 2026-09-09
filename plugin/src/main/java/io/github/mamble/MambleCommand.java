@@ -210,13 +210,15 @@ public final class MambleCommand implements BasicCommand {
         RewardTable table = plugin.rewards();
         switch (op) {
             case "list" -> {
-                sender.sendMessage(plugin.message("<gray>品目 " + table.size() + " 件:"));
+                sender.sendMessage(plugin.message("<gray>品目 " + table.size() + " 件 (預け入れの単価 / 払い出しはその "
+                        + table.withdrawMultiplier() + " 倍):"));
                 table.entries().forEach(entry -> sender.sendMessage(plugin.message("<dark_gray>- <white>"
-                        + entry.getKey().getKey() + " <gold>" + MambleItems.amount(entry.getValue()))));
+                        + entry.getKey().getKey() + " <gold>" + MambleItems.amount(entry.getValue())
+                        + " <gray>/ 払い出し " + MambleItems.amount(entry.getValue() * table.withdrawMultiplier()))));
             }
             case "add" -> {
                 if (args.length < 4) {
-                    sender.sendMessage(plugin.message("<red>使い方: /mb reward add <item_id> <価格>"));
+                    sender.sendMessage(plugin.message("<red>使い方: /mb reward add <item_id> <預け入れの単価>"));
                     return;
                 }
                 Optional<Material> material = RewardTable.materialOf(args[2]);
@@ -239,7 +241,8 @@ public final class MambleCommand implements BasicCommand {
                     return;
                 }
                 sender.sendMessage(plugin.message("<green>" + material.get().getKey() + " を "
-                        + MambleItems.amount(price) + " で登録しました。"));
+                        + MambleItems.amount(price) + " で登録しました <gray>(払い出し "
+                        + MambleItems.amount(price * table.withdrawMultiplier()) + ")。"));
             }
             case "remove" -> {
                 if (args.length < 3) {

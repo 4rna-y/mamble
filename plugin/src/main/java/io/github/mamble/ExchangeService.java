@@ -135,7 +135,7 @@ public final class ExchangeService implements Listener {
     // ------------------------------------------------------------------ 払い出し
 
     private void withdraw(Player player, ExchangeMenu menu, Material material, boolean bulk) {
-        Optional<Long> unit = menu.table().price(material);
+        Optional<Long> unit = menu.table().withdrawPrice(material);
         if (unit.isEmpty()) {
             return;
         }

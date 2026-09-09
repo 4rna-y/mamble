@@ -81,7 +81,8 @@ public final class ExchangeMenu implements InventoryHolder {
     private ItemStack rewardIcon(Material material, long price) {
         ItemStack item = ItemStack.of(material);
         item.setData(DataComponentTypes.LORE, ItemLore.lore().addLines(List.of(
-                plain("価格 " + MambleItems.amount(price) + " クレジット", NamedTextColor.GOLD),
+                plain("払い出し " + MambleItems.amount(price * table.withdrawMultiplier()) + " クレジット", NamedTextColor.GOLD),
+                plain("預け入れ " + MambleItems.amount(price) + " クレジット", NamedTextColor.YELLOW),
                 plain("クリック: 1個", NamedTextColor.GRAY),
                 plain("シフトクリック: " + bulkAmount + "個", NamedTextColor.GRAY))).build());
         return item;
@@ -95,7 +96,7 @@ public final class ExchangeMenu implements InventoryHolder {
                 plain("  シフトクリックでそのスタック全部", NamedTextColor.DARK_GRAY),
                 plain("払い出し: 上の品目をクリック", NamedTextColor.GRAY),
                 plain("  シフトクリックで " + bulkAmount + " 個", NamedTextColor.DARK_GRAY),
-                plain("預け入れと払い出しの単価は同じ", NamedTextColor.GRAY))).build());
+                plain("払い出しは預け入れの " + table.withdrawMultiplier() + " 倍", NamedTextColor.GRAY))).build());
         return item;
     }
 

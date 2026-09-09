@@ -21,14 +21,20 @@ class RewardTableTest {
     void defaults() {
         RewardTable table = RewardTable.defaults();
         assertEquals(7, table.size());
-        assertEquals(Optional.of(50L), table.price(Material.COAL));
-        assertEquals(Optional.of(500L), table.price(Material.COPPER_INGOT));
-        assertEquals(Optional.of(1500L), table.price(Material.IRON_INGOT));
-        assertEquals(Optional.of(2500L), table.price(Material.GOLD_INGOT));
-        assertEquals(Optional.of(5000L), table.price(Material.DIAMOND));
-        assertEquals(Optional.of(320000L), table.price(Material.NETHERITE_SCRAP));
-        assertEquals(Optional.of(640000L), table.price(Material.NETHERITE_INGOT));
+        assertEquals(Optional.of(1L), table.price(Material.COAL));
+        assertEquals(Optional.of(10L), table.price(Material.COPPER_INGOT));
+        assertEquals(Optional.of(30L), table.price(Material.IRON_INGOT));
+        assertEquals(Optional.of(50L), table.price(Material.GOLD_INGOT));
+        assertEquals(Optional.of(100L), table.price(Material.DIAMOND));
+        assertEquals(Optional.of(6400L), table.price(Material.NETHERITE_SCRAP));
+        assertEquals(Optional.of(12800L), table.price(Material.NETHERITE_INGOT));
         assertTrue(table.price(Material.CHARCOAL).isEmpty());
+        // 払い出しは 50 倍
+        assertEquals(50L, table.withdrawMultiplier());
+        assertEquals(Optional.of(50L), table.withdrawPrice(Material.COAL));
+        assertEquals(Optional.of(5000L), table.withdrawPrice(Material.DIAMOND));
+        assertEquals(Optional.of(640000L), table.withdrawPrice(Material.NETHERITE_INGOT));
+        assertTrue(table.withdrawPrice(Material.CHARCOAL).isEmpty());
     }
 
     @Test
@@ -56,11 +62,26 @@ class RewardTableTest {
 
         created.put(Material.EMERALD, 80);
         created.remove(Material.COAL);
+        created.setWithdrawMultiplier(7);
         created.save(file);
 
         RewardTable loaded = RewardTable.load(file);
         assertEquals(created.all(), loaded.all());
         assertEquals(Optional.of(80L), loaded.price(Material.EMERALD));
+        assertEquals(7L, loaded.withdrawMultiplier());
+        assertEquals(Optional.of(560L), loaded.withdrawPrice(Material.EMERALD));
+        assertThrows(IllegalArgumentException.class, () -> loaded.setWithdrawMultiplier(0));
+    }
+
+    @Test
+    @DisplayName("倍率の無い古い rewards.yml は既定の 50 倍で読む")
+    void legacyFileWithoutMultiplier() throws Exception {
+        File dir = Files.createTempDirectory("mamble-rewards-legacy").toFile();
+        File file = new File(dir, "rewards.yml");
+        Files.writeString(file.toPath(), "rewards:\n  coal: 1\n  diamond: 100\n");
+        RewardTable loaded = RewardTable.load(file);
+        assertEquals(RewardTable.DEFAULT_WITHDRAW_MULTIPLIER, loaded.withdrawMultiplier());
+        assertEquals(Optional.of(5000L), loaded.withdrawPrice(Material.DIAMOND));
     }
 
     @Test

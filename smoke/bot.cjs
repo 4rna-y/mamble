@@ -129,9 +129,9 @@ bot.once('spawn', async () => {
       const win = await Promise.race([opened, sleep(5000).then(() => null)]);
       emit('exchange_window', { opened: !!win, slots: win && win.slots.filter(Boolean).slice(0, 12).map((s) => s.name) });
       if (win) {
-        await bot.clickWindow(9, 0, 0); // 1つ目の品目 (石炭 50) を1個
+        await bot.clickWindow(9, 0, 0); // 1つ目の品目 (石炭 50 = 1×50) を1個
         await sleep(800);
-        await bot.clickWindow(11, 0, 1); // 3つ目 (鉄 1500) をシフトで 16個
+        await bot.clickWindow(11, 0, 1); // 3つ目 (鉄 1500 = 30×50) をシフトで 16個
         await sleep(800);
         const balanceSlot = win.slots[4];
         emit('exchange_balance_slot', { name: balanceSlot && balanceSlot.name, customName: balanceSlot && String(balanceSlot.customName) });
